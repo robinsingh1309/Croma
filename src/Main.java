@@ -1,10 +1,14 @@
+import java.io.IOException;
+
+import extractor.CromaCatWebUrlExtractor;
 
 public class Main {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		
-		System.out.println("Robin");
-
+		CromaCatWebUrlExtractor extractor = new CromaCatWebUrlExtractor();
+		
+		extractor.getCategoryWebUrl();
 	}
 
 }
