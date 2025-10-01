@@ -17,7 +17,7 @@ public class CromaCatWebUrlExtractor {
 	private static final Logger logger = Logger.getLogger(CromaCatWebUrlExtractor.class.getName());
 	
 	private final String croma_url = CromaWebUrlEnum.CROMA_URL_TO_EXTRACT_CATEGORY_URL.getValue();
-	private final String filePath = "/home/robin/eclipse-workspace/TataCroma/src/csv/";
+	private final String filePath = "/home/robin/eclipse-workspace/TataCroma/src/csv/category_urls.txt";
 	
 	private final ConnectToCroma urlConnection;
 	
