@@ -57,7 +57,8 @@ public class CromaCatWebUrlExtractor {
 			
             logger.info("Number of entries found: " + entries.length());
 			
-			for(int i = 0; i < entries.length(); i++) 
+            // i don't want the last object
+			for(int i = 0; i < entries.length()-1; i++) 
 			{
 				JSONObject currentEntriesObject = entries.getJSONObject(i);
 				String url = "https://www.croma.com" + currentEntriesObject.getString("url");
