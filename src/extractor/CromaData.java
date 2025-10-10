@@ -40,13 +40,13 @@ public class CromaData {
                     int catCode = Integer.parseInt(parts[parts.length - 1]);   // last part = category code
                     String fileName = parts[parts.length - 3];                 // category name before "/c/"
 
-                    String writeDataFilePath = "/home/robin/eclipse-workspace/TataCroma/src/csv/%s.csv";
+                    String writeDataFilePath = "/home/robin/eclipse-workspace/TataCroma/src/csv/cleanedData/%s.csv";
                     String outputFile = String.format(writeDataFilePath, fileName);
 
                     try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile))) 
                     {
                         // Header row
-                        writer.write("product_name,product_manufacturer,product_mrp,type,quickViewDesc\n");
+                        writer.write("\"product_name\",\"product_manufacturer\",\"product_mrp\",\"type\",\"quickViewDesc\"\n");
 
                         int totalPages = 1;
                         int page = 0;
