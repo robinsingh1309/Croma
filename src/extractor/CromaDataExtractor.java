@@ -1,12 +1,12 @@
 package extractor;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -17,7 +17,8 @@ public class CromaDataExtractor {
 
     private static final Logger logger = Logger.getLogger(CromaDataExtractor.class.getName());
 
-    public void getCromaData(String jsonResponse, BufferedWriter writer) {
+    // Returns the next available row number
+    public int getCromaData(String jsonResponse, XSSFSheet sheet, int rowNum) {
 
         Map<Integer, String> codeWithName = new HashMap<>();
 
@@ -34,8 +35,7 @@ public class CromaDataExtractor {
 
                 if (values != null) {
 
-                    for (int i = 0; i < values.length(); i++) 
-                    {
+                    for (int i = 0; i < values.length(); i++) {
                         JSONObject currentValueObject = values.getJSONObject(i);
 
                         String name = currentValueObject.optString("name", "");
@@ -50,33 +50,26 @@ public class CromaDataExtractor {
 
             if (products == null) {
                 logger.warning("No products found in response");
-                return;
+                return rowNum;
             }
 
-            for (int j = 0; j < products.length(); j++) 
-            {
+            for (int j = 0; j < products.length(); j++) {
+
                 JSONObject currentProductsObject = products.getJSONObject(j);
 
                 String product_manufacturer = currentProductsObject.optString("manufacturer", "N/A");
                 String product_name = currentProductsObject.optString("name", "N/A");
+                String product_image = currentProductsObject.optString("plpImage", "N/A");
 
                 String quickViewDesc = currentProductsObject.optString("quickViewDesc", "N/A");
                 StringBuilder descBuilder = new StringBuilder();
 
-                if (!quickViewDesc.isEmpty()) 
-                {
-                    /**
-                     * since the description of product is stored in the form of HTML
-                     * That's why i am using the jsoup here to extract the info from the html page which we are receiving from JSON response
-                     */
+                if (!quickViewDesc.isEmpty()) {
                     Document doc = Jsoup.parse(quickViewDesc);
                     Elements listItems = doc.select("li");
 
                     for (int i = 0; i < listItems.size(); i++) {
-
                         descBuilder.append(listItems.get(i).text());
-
-                        // the below line is to make sure we don't add unnecessary pipe('|') in the end.
                         if (i < listItems.size() - 1) {
                             descBuilder.append(" | ");
                         }
@@ -89,69 +82,36 @@ public class CromaDataExtractor {
                 int categoryL2 = Integer.parseInt(currentProductsObject.optString("categoryL2", "0"));
                 String type = codeWithName.getOrDefault(categoryL2, "Unknown");
 
-                // FIXED: Proper CSV formatting with quotes and escaping
-                String cleanedProductName = escapeCsvField(product_name);
-                String cleanedManufacturer = escapeCsvField(product_manufacturer);
-                String cleanedType = escapeCsvField(type);
-                String cleanedDescription = escapeCsvField(descBuilder.toString());
-
-                // Write properly formatted CSV line
-                writer.write(cleanedProductName + "," + 
-                           cleanedManufacturer + "," +
-                           product_mrp + "," + 
-                           cleanedType + "," + 
-                           cleanedDescription + "\n");
-
-                writer.flush();
+                // Write to Excel row
+                Row row = sheet.createRow(rowNum++);
+                int col = 0;
+                row.createCell(col++).setCellValue(product_name);
+                row.createCell(col++).setCellValue(product_manufacturer);
+                row.createCell(col++).setCellValue(product_mrp);
+                row.createCell(col++).setCellValue(type);
+                row.createCell(col++).setCellValue(descBuilder.toString());
+                row.createCell(col++).setCellValue(product_image);
             }
 
-            logger.info("Data extraction & writing completed successfully for " + products.length() + " products");
+            logger.info("Data extraction completed for " + products.length() + " products");
 
-        } catch (IOException e) {
-            logger.log(Level.SEVERE, "I/O error while writing product data", e);
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Unexpected error while extracting product data", e);
         }
-    }
 
-    /**
-     * Helper method to properly escape CSV fields
-     * Fields containing commas, quotes, or newlines should be wrapped in quotes
-     * Internal quotes should be escaped with another quote
-     */
-    private String escapeCsvField(String field) {
-        if (field == null) {
-            return "\"\"";
-        }
-        
-        // Check if field needs quoting
-        boolean needsQuotes = field.contains(",") || 
-                             field.contains("\"") || 
-                             field.contains("\n") || 
-                             field.contains("\r");
-        
-        if (needsQuotes) {
-            // Escape internal quotes by doubling them
-            String escaped = field.replace("\"", "\"\"");
-            return "\"" + escaped + "\"";
-        } else {
-            return field;
-        }
+        return rowNum;
     }
 
     public int getPageCount(String jsonResponse) {
-
-        try 
-        {
+        
+        try {
+        
             JSONObject jsonResponseObject = new JSONObject(jsonResponse);
             JSONObject pagination = jsonResponseObject.getJSONObject("pagination");
-
+            
             return pagination.optInt("totalPages", 1);
-
-        } catch (Exception e) 
-        {
+        } catch (Exception e) {
             logger.log(Level.WARNING, "Error extracting page count", e);
-
             return 1;
         }
     }
