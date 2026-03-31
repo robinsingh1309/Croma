@@ -57,22 +57,23 @@ public class CromaDataExtractor {
 
                 JSONObject currentProductsObject = products.getJSONObject(j);
 
-                String product_manufacturer = currentProductsObject.optString("manufacturer", "N/A");
-                String product_name = currentProductsObject.optString("name", "N/A");
-                String product_image = currentProductsObject.optString("plpImage", "N/A");
-
-                String quickViewDesc = currentProductsObject.optString("quickViewDesc", "N/A");
+                String product_manufacturer = currentProductsObject.optString("manufacturer", "");
+                String product_name = currentProductsObject.optString("name", "");
+                String product_image = currentProductsObject.optString("plpImage", "");
+                
+                String quickViewDesc = currentProductsObject.optString("quickViewDesc", "");
                 StringBuilder descBuilder = new StringBuilder();
 
                 if (!quickViewDesc.isEmpty()) {
+                    
                     Document doc = Jsoup.parse(quickViewDesc);
                     Elements listItems = doc.select("li");
 
                     for (int i = 0; i < listItems.size(); i++) {
                         descBuilder.append(listItems.get(i).text());
-                        if (i < listItems.size() - 1) {
+                        
+                        if (i < listItems.size() - 1)
                             descBuilder.append(" | ");
-                        }
                     }
                 }
 
@@ -80,17 +81,18 @@ public class CromaDataExtractor {
                 int product_mrp = (mrp != null) ? mrp.optInt("value", 0) : 0;
 
                 int categoryL2 = Integer.parseInt(currentProductsObject.optString("categoryL2", "0"));
-                String type = codeWithName.getOrDefault(categoryL2, "Unknown");
+                String type = codeWithName.getOrDefault(categoryL2, "");
 
                 // Write to Excel row
                 Row row = sheet.createRow(rowNum++);
                 int col = 0;
-                row.createCell(col++).setCellValue(product_name);
-                row.createCell(col++).setCellValue(product_manufacturer);
-                row.createCell(col++).setCellValue(product_mrp);
                 row.createCell(col++).setCellValue(type);
+                row.createCell(col++).setCellValue(product_name);
                 row.createCell(col++).setCellValue(descBuilder.toString());
                 row.createCell(col++).setCellValue(product_image);
+                row.createCell(col++).setCellValue(product_manufacturer);
+                row.createCell(col++).setCellValue(product_mrp);
+                
             }
 
             logger.info("Data extraction completed for " + products.length() + " products");

@@ -41,7 +41,7 @@ public class CromaData {
                     String fileName = parts[parts.length - 3];                 // category name before "/c/"
 
                     String excelFilePath = String.format(
-                            "/home/robin/eclipse-workspace/TataCroma/src/csv/cleanedData/%s.xlsx", fileName);
+                            "/home/robin/eclipse-workspace/TataCroma/src/csv/productBeanData/%s.xlsx", fileName);
 
                     // Create workbook and sheet
                     XSSFWorkbook workbook = new XSSFWorkbook();
@@ -49,7 +49,7 @@ public class CromaData {
 
                     // Create header row
                     Row header = sheet.createRow(0);
-                    String[] headers = {"product_name", "product_manufacturer", "product_mrp", "type", "quickViewDesc", "image"};
+                    String[] headers = {"Product_Type","Name", "Description", "Image_URL", "Brand", "product_mrp"};
                     for (int i = 0; i < headers.length; i++) {
                         Cell cell = header.createCell(i);
                         cell.setCellValue(headers[i]);

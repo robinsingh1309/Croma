@@ -9,13 +9,13 @@
 	<classpathentry kind="lib" path="/home/robin/Downloads/json-20140107.jar"/>
 	<classpathentry kind="lib" path="/home/robin/Downloads/jsoup-1.21.2.jar"/>
 	<classpathentry kind="lib" path="/home/robin/Downloads/excel_jar_files/xmlbeans-5.1.1.jar"/>
-	<classpathentry kind="lib" path="/home/robin/Downloads/excel_jar_files/poi-ooxml-lite-5.2.3.jar"/>
-	<classpathentry kind="lib" path="/home/robin/Downloads/excel_jar_files/poi-ooxml-5.2.3.jar"/>
-	<classpathentry kind="lib" path="/home/robin/Downloads/excel_jar_files/poi-5.2.3.jar"/>
 	<classpathentry kind="lib" path="/home/robin/Downloads/excel_jar_files/log4j-core-2.20.0.jar"/>
 	<classpathentry kind="lib" path="/home/robin/Downloads/excel_jar_files/log4j-api-2.20.0.jar"/>
-	<classpathentry kind="lib" path="/home/robin/Downloads/excel_jar_files/commons-io-2.11.0.jar"/>
-	<classpathentry kind="lib" path="/home/robin/Downloads/excel_jar_files/commons-compress-1.21.jar"/>
 	<classpathentry kind="lib" path="/home/robin/Downloads/excel_jar_files/commons-collections4-4.4.jar"/>
+	<classpathentry kind="lib" path="/home/robin/Downloads/excel_jar_files/poi-ooxml-lite-5.2.5.jar"/>
+	<classpathentry kind="lib" path="/home/robin/Downloads/excel_jar_files/poi-ooxml-5.2.5.jar"/>
+	<classpathentry kind="lib" path="/home/robin/Downloads/excel_jar_files/poi-5.2.5.jar"/>
+	<classpathentry kind="lib" path="/home/robin/Downloads/excel_jar_files/commons-io-2.15.1.jar"/>
+	<classpathentry kind="lib" path="/home/robin/Downloads/excel_jar_files/commons-compress-1.26.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
